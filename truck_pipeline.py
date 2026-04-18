@@ -45,7 +45,7 @@ def _detect_from_imu(imu_path, fps, total_frames):
 
     # Umbral: percentil 40 separa pausas de ciclo (5-9s) de actividad real
     threshold = np.percentile(smooth, 40)
-    print(f"dQ stats: mean={smooth.mean():.5f}, p40={threshold:.5f}, max={smooth.max():.5f}")
+    print(f"dQ stats: mean={smooth.mean():.5f}, p45={threshold:.5f}, max={smooth.max():.5f}")
 
     is_idle = smooth < threshold
 
@@ -53,7 +53,7 @@ def _detect_from_imu(imu_path, fps, total_frames):
     # Erosión: eliminar ráfagas activas cortas (< 5s) dentro de un período idle
     # Dilatación: unir períodos idle separados por < 5s (pausas de ciclo)
     MIN_ACTIVE_FRAMES = int(5 * fps)   # activo real dura > 5s
-    MIN_IDLE_FRAMES   = int(10 * fps)  # intercambio real dura > 10s
+    MIN_IDLE_FRAMES   = int(12 * fps)  # intercambio real dura > 12s
     MERGE_GAP_FRAMES  = int(5 * fps)   # unir idle separados por < 5s activos
 
     # Rellenar gaps activos cortos dentro del idle (merge)
@@ -80,7 +80,7 @@ def _detect_from_imu(imu_path, fps, total_frames):
         elif not idle and in_event:
             in_event = False
             duration = t - t_start
-            if duration >= 10:
+            if duration >= 12:
                 truck_events.append({
                     "t_arrival": float(t_start),
                     "t_departure": float(t),
@@ -91,7 +91,7 @@ def _detect_from_imu(imu_path, fps, total_frames):
     if in_event:
         t = times[-1]
         duration = t - t_start
-        if duration >= 10:
+        if duration >= 12:
             truck_events.append({
                 "t_arrival": float(t_start),
                 "t_departure": float(t),
