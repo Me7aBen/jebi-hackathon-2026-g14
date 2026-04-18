@@ -24,7 +24,6 @@ env/
 *.egg-info/
 venv/
 tmp/
-outputs/
 inputs/*.mp4
 inputs/*.npy
 inputs/*.csv
