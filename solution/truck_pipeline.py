@@ -179,6 +179,6 @@ if __name__ == '__main__':
         print("ERROR: no se encontró video en ./inputs/"); sys.exit(1)
 
     imu_path = sys.argv[2] if len(sys.argv) > 2 else (
-        next(iter(glob.glob('./inputs/*.npy')), None))
+        next(iter(glob.glob('./inputs/*.npy') + glob.glob('./inputs/*.csv')), None))
 
     detect_truck_events(video_path, imu_path)
